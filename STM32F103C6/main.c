@@ -5,89 +5,29 @@
  * Compiler:  Keil for ARM
  */
 
-
+#include "timer.h"
 #include <stm32f103x6.h>
 #include <stdint.h>
 #include "delay.h"
 #include "lcd.h"
-
-void spi1_init(void);
-uint8_t spi1_transfer(uint8_t);
-void convertString(uint8_t,uint8_t);
-void imprimirTemp(void);
-
-uint32_t str[4] = {'0','0','.','0'};
-uint32_t data [3] ;
+#include "spi.h"
 
 
 int main (void)
  { 
-    uint8_t c =0;
-   spi1_init();
-    GPIOB->CRL = 0x33333333;
-    GPIOB->CRH = 0x33333333;
+    timer_init();
+    spi1_init();
     lcd_init();
-   GPIOA->BSRR = (1<<4); 
-    spi1_transfer(0x80);
-    spi1_transfer(0x04);
-    GPIOA->BRR = (1<<4); 
+    activeSpi();
     while(1){
-	      GPIOA->BSRR = (1<<4); 
-	      spi1_transfer(0x02);
-	     for(c=0;c<3;c++){
-		  data[c]= spi1_transfer(0x00);
-	       }
-	       GPIOA->BRR = (1<<4);
-	       //convertString(data[0],data[1]);
-	       //lcd_gotoXY(0,0);
-	       //lcd_string( str, 4);
-	       imprimirTemp();
-	       delay_us(500);
+       if (timer_getFlag()){
+	      leerTemp();
+	      imprimirTemp();
+	      timer_resetFlag();
+	 }
+
      }
  }   
 
-/*
-int main (void)
- {
-    RCC->APB2ENR |= 0xFC;      
-    GPIOB->CRL = 0x33333333;
-     GPIOB->CRH = 0x44444333;
-    lcd_init();
-    lcd_gotoXY(0,0);
-    lcd_string( "Hola", 4);
- }   
- */
- 
- /* The function initializes the SPI module */
-void spi1_init(){
-RCC->APB2ENR |= 0xFC|(1<<12); /* enable clocks for GPIO and SPI1 */
-GPIOA->CRL = 0xB4B34444; /* MOSI (PA7) and SCK(PA5): alt. func. out, MISO
-(PA6): input, PA4 output */
-SPI1->CR1 = 0x35D; /* SPE = 1, BR = 3, FFD = 0, SSI and SSM = 1 */
-}
 
-
-uint8_t spi1_transfer(uint8_t d){
-SPI1->DR = d; /* send the contents of d */
-while((SPI1->SR&(1<<0)) == 0); /* wait until RXNE is set */
-return SPI1->DR; /* return the received data */
-}
-
-void convertString(uint8_t entero,uint8_t coma){
-      str[0]=  ((entero /10) + '0');
-      str[1] = ((entero % 10) +'0');
-      str[3] = ((coma>>5)+ '0');
-}
-
-void imprimirTemp(){
-   volatile uint32_t decena,unidad,coma;
-   lcd_gotoXY(0,0);
-   decena = data[0]/10;
-   unidad = data[0] %10;
-   lcd_sendData('0'+decena);
-   lcd_sendData('0'+unidad);
-   lcd_sendData('.');
-   coma = data[1]>>5;
-    lcd_sendData('0'+coma);
-   }
 

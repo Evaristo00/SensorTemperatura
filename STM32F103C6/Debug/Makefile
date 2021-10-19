@@ -7,7 +7,7 @@ PROJECT =
 MCU = STM32F103C6
 COMPILER = "Keil for ARM"
 TARGET = Debug
-SHELL = C:\WINDOWS\system32\cmd.exe
+SHELL = C:\Windows\system32\cmd.exe
 
 ## Tools general options
 ASMFLAGS=--cpu=cortex-m3 --thumb -g
@@ -19,40 +19,50 @@ CC=armcc.exe
 LD=armlink.exe
 ASM=armasm.exe
 BIN2HEX=fromelf.exe
-#  G:/Mi unidad/Ing Computacion/Facultad/Cuarto año/Taller de proyecto I/Practica/TP2/Simulacion/SensorTemperatura/STM32F103C6/Debug/Debug.elf: TOOL=LD
-#     G:/Mi unidad/Ing Computacion/Facultad/Cuarto año/Taller de proyecto I/Practica/TP2/Simulacion/SensorTemperatura/STM32F103C6/Debug/main.o: TOOL=CC
-#        G:/Mi unidad/Ing Computacion/Facultad/Cuarto año/Taller de proyecto I/Practica/TP2/Simulacion/SensorTemperatura/STM32F103C6/main.c
-#     G:/Mi unidad/Ing Computacion/Facultad/Cuarto año/Taller de proyecto I/Practica/TP2/Simulacion/SensorTemperatura/STM32F103C6/Debug/SYSTEM~1.o: TOOL=CC
-#        G:/Mi unidad/Ing Computacion/Facultad/Cuarto año/Taller de proyecto I/Practica/TP2/Simulacion/SensorTemperatura/STM32F103C6/system_stm32f1xx.c
-#     G:/Mi unidad/Ing Computacion/Facultad/Cuarto año/Taller de proyecto I/Practica/TP2/Simulacion/SensorTemperatura/STM32F103C6/Debug/STARTU~1.o: TOOL=ASM
-#        G:/Mi unidad/Ing Computacion/Facultad/Cuarto año/Taller de proyecto I/Practica/TP2/Simulacion/SensorTemperatura/STM32F103C6/startup_stm32f103.s
-#     G:/Mi unidad/Ing Computacion/Facultad/Cuarto año/Taller de proyecto I/Practica/TP2/Simulacion/SensorTemperatura/STM32F103C6/Debug/delay.o: TOOL=CC
-#        G:/Mi unidad/Ing Computacion/Facultad/Cuarto año/Taller de proyecto I/Practica/TP2/Simulacion/SensorTemperatura/STM32F103C6/delay.c
-#     G:/Mi unidad/Ing Computacion/Facultad/Cuarto año/Taller de proyecto I/Practica/TP2/Simulacion/SensorTemperatura/STM32F103C6/Debug/lcd.o: TOOL=CC
-#        G:/Mi unidad/Ing Computacion/Facultad/Cuarto año/Taller de proyecto I/Practica/TP2/Simulacion/SensorTemperatura/STM32F103C6/lcd.c
+#  G:/My Drive/Facultad/4to/Segundo Cuatrimestre/Taller 1/TP2/SensorTemp/SensorTemperatura/STM32F103C6/Debug/Debug.elf: TOOL=LD
+#     G:/My Drive/Facultad/4to/Segundo Cuatrimestre/Taller 1/TP2/SensorTemp/SensorTemperatura/STM32F103C6/Debug/main.o: TOOL=CC
+#        G:/My Drive/Facultad/4to/Segundo Cuatrimestre/Taller 1/TP2/SensorTemp/SensorTemperatura/STM32F103C6/main.c
+#     G:/My Drive/Facultad/4to/Segundo Cuatrimestre/Taller 1/TP2/SensorTemp/SensorTemperatura/STM32F103C6/Debug/system_stm32f1xx.o: TOOL=CC
+#        G:/My Drive/Facultad/4to/Segundo Cuatrimestre/Taller 1/TP2/SensorTemp/SensorTemperatura/STM32F103C6/system_stm32f1xx.c
+#     G:/My Drive/Facultad/4to/Segundo Cuatrimestre/Taller 1/TP2/SensorTemp/SensorTemperatura/STM32F103C6/Debug/startup_stm32f103.o: TOOL=ASM
+#        G:/My Drive/Facultad/4to/Segundo Cuatrimestre/Taller 1/TP2/SensorTemp/SensorTemperatura/STM32F103C6/startup_stm32f103.s
+#     G:/My Drive/Facultad/4to/Segundo Cuatrimestre/Taller 1/TP2/SensorTemp/SensorTemperatura/STM32F103C6/Debug/delay.o: TOOL=CC
+#        G:/My Drive/Facultad/4to/Segundo Cuatrimestre/Taller 1/TP2/SensorTemp/SensorTemperatura/STM32F103C6/delay.c
+#     G:/My Drive/Facultad/4to/Segundo Cuatrimestre/Taller 1/TP2/SensorTemp/SensorTemperatura/STM32F103C6/Debug/lcd.o: TOOL=CC
+#        G:/My Drive/Facultad/4to/Segundo Cuatrimestre/Taller 1/TP2/SensorTemp/SensorTemperatura/STM32F103C6/lcd.c
+#     G:/My Drive/Facultad/4to/Segundo Cuatrimestre/Taller 1/TP2/SensorTemp/SensorTemperatura/STM32F103C6/Debug/spi.o: TOOL=CC
+#        G:/My Drive/Facultad/4to/Segundo Cuatrimestre/Taller 1/TP2/SensorTemp/SensorTemperatura/STM32F103C6/spi.c
+#     G:/My Drive/Facultad/4to/Segundo Cuatrimestre/Taller 1/TP2/SensorTemp/SensorTemperatura/STM32F103C6/Debug/timer.o: TOOL=CC
+#        G:/My Drive/Facultad/4to/Segundo Cuatrimestre/Taller 1/TP2/SensorTemp/SensorTemperatura/STM32F103C6/timer.c
 
 # Build tree:
 all:	Debug
 
 Debug:	Debug.elf
 
-Debug.elf:	main.o SYSTEM~1.o STARTU~1.o delay.o lcd.o 
-	$(LD)  $(LDFLAGS)  "main.o" "SYSTEM~1.o" "STARTU~1.o" "delay.o" "lcd.o" --output "Debug.elf"
+Debug.elf:	main.o system_stm32f1xx.o startup_stm32f103.o delay.o lcd.o spi.o timer.o 
+	$(LD)  $(LDFLAGS)  "main.o" "system_stm32f1xx.o" "startup_stm32f103.o" "delay.o" "lcd.o" "spi.o" "timer.o" --output "Debug.elf"
 
 main.o:	../main.c 
 	$(CC) $(CCFLAGS)  "../main.c" -c -o "main.o"
 
-SYSTEM~1.o:	../system_stm32f1xx.c 
-	$(CC) $(CCFLAGS)  "../system_stm32f1xx.c" -c -o "SYSTEM~1.o"
+system_stm32f1xx.o:	../system_stm32f1xx.c 
+	$(CC) $(CCFLAGS)  "../system_stm32f1xx.c" -c -o "system_stm32f1xx.o"
 
-STARTU~1.o:	../startup_stm32f103.s 
-	$(ASM) $(ASMFLAGS)  "../startup_stm32f103.s" -o "STARTU~1.o"
+startup_stm32f103.o:	../startup_stm32f103.s 
+	$(ASM) $(ASMFLAGS)  "../startup_stm32f103.s" -o "startup_stm32f103.o"
 
 delay.o:	../delay.c 
 	$(CC) $(CCFLAGS)  "../delay.c" -c -o "delay.o"
 
 lcd.o:	../lcd.c 
 	$(CC) $(CCFLAGS)  "../lcd.c" -c -o "lcd.o"
+
+spi.o:	../spi.c 
+	$(CC) $(CCFLAGS)  "../spi.c" -c -o "spi.o"
+
+timer.o:	../timer.c 
+	$(CC) $(CCFLAGS)  "../timer.c" -c -o "timer.o"
 
 # tidy - delete all temporary files which are not involved in the target generation
 tidy:
@@ -61,7 +71,9 @@ tidy:
 clean:	tidy
 	rm -rf Debug.elf
 	rm -rf main.o
-	rm -rf SYSTEM~1.o
-	rm -rf STARTU~1.o
+	rm -rf system_stm32f1xx.o
+	rm -rf startup_stm32f103.o
 	rm -rf delay.o
 	rm -rf lcd.o
+	rm -rf spi.o
+	rm -rf timer.o

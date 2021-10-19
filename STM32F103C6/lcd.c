@@ -1,6 +1,8 @@
 #include "lcd.h"
 void lcd_init()
 {
+   GPIOB->CRL = 0x33333333;
+   GPIOB->CRH = 0x33333333;
    GPIOB->BRR = (1<<LCD_EN); //same as GPIOB>ODR &= ~(1<<LCD_EN); /* LCD_EN = 0 */
    GPIOB->BRR = (1<<LCD_RW); //same as GPIOB>ODR &= ~(1<<LCD_RW); /* LCD_RW = 0 */
    delay_us(3000); /* wait 3ms */

@@ -23,12 +23,32 @@ return SPI1->DR; /* return the received data */
 void imprimirTemp(){
    volatile uint32_t decena,unidad,coma;
    lcd_gotoXY(0,0);
+   if (data[0] > 125){		//pregunto si es negativo
+      lcd_sendData('-');
+      data[0] = ((~ data[0]) & 0x000000FF) ;
+      switch(data[1]){
+	 case(64):
+	    coma = 6;
+	    break;
+	 case(128):
+	    coma = 4;
+	    break;
+	 case(192):
+	    coma= 2;
+	     break;
+	 case(0):
+	    coma=0;
+	    data[0]++;
+	 }
+   }else{
+      lcd_sendData(' ');
+      coma = data[1]>>5;   
+   }
    decena = data[0]/10;
    unidad = data[0] %10;
    lcd_sendData('0'+decena);
    lcd_sendData('0'+unidad);
    lcd_sendData('.');
-   coma = data[1]>>5;
     lcd_sendData('0'+coma);
    }
 
